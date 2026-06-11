@@ -8,9 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Al estar el Root Directory en 'server', subimos un nivel para dar con 'client'
+// Servir los archivos estáticos desde la carpeta client subiendo un nivel
 app.use(express.static(path.join(__dirname, '..', 'client')));
 
+// Ruta para procesar los mensajes del bot
 app.post('/api/mensaje', async (req, res) => {
     try {
         const { mensaje } = req.body;
@@ -21,7 +22,8 @@ app.post('/api/mensaje', async (req, res) => {
     }
 });
 
-app.get('*', (req, res) => {
+// SOLUCIÓN AL ERROR: Esta es la forma moderna de capturar cualquier ruta sin romper Express
+app.get(/^\/(?!api).*$/, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
 
