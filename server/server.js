@@ -50,8 +50,9 @@ app.post('/api/mensaje', async (req, res) => {
     }
 });
 
-// RUTA COMODÍN CORREGIDA: Responde con el index.html ante cualquier ruta o cuenta externa
-app.get('*', (req, res) => {
+// RUTA COMODÍN CORREGIDA UNIVERSAL: 
+// Usar (.*) en lugar de * evita el error de "Missing parameter name" en las nuevas versiones de Express
+app.get('(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
 
