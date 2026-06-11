@@ -1,53 +1,32 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const OpenAI = require("openai");
-
-dotenv.config();
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
 
 const app = express();
 
+// Configuraciones básicas
 app.use(cors());
 app.use(express.json());
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+// CONFIGURACIÓN CLAVE: Muestra la carpeta del cliente (HTML, CSS, JS) en el enlace principal
+app.use(express.static(path.join(__dirname, '../client')));
+
+// Aquí van tus rutas de la API del bot (por ejemplo, para escuchar los mensajes)
+app.post('/api/mensaje', async (req, res) => {
+    try {
+        const { mensaje } = req.body;
+        // Aquí dentro irá tu lógica con OpenAI o lo que responda tu bot...
+        res.json({ respuesta: `Echo: ${mensaje}` });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
 });
 
-// El cambio principal está en toda esta sección /chat
-app.post("/chat", async (req, res) => {
-  try {
-    const { message } = req.body;
-
-    const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Eres Echo, el asistente oficial de VENN. Eres inteligente, amable y elegante. Nunca dices que eres ChatGPT ni un modelo de lenguaje. Ayudas a descubrir comunidades, videojuegos, anime, libros y tecnología."
-        },
-        {
-          role: "user",
-          content: message
-        }
-      ]
-    });
-
-    const reply = response.choices[0].message.content;
-
-    res.json({ reply });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      reply: "Echo no ha podido responder en este momento."
-    });
-  }
-});
-
-const PORT = process.env.PORT || 3000;
+// El puerto dinámico que Render necesita obligatoriamente
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Echo funcionando en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor funcionando en el puerto ${PORT}`);
 });
