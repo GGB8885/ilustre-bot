@@ -10,7 +10,11 @@ function addMessage(content, type) {
     chat.scrollTop = chat.scrollHeight;
 }
 
-async function sendMessage() {
+// 1. Añadimos "(e)" aquí para capturar el evento de envío o pulsación de tecla
+async function sendMessage(e) {
+    // 2. EVITA EL BORRADO: Detiene el refresco automático de la página
+    if (e) e.preventDefault();
+
     const text = input.value.trim();
     if (!text) return;
 
@@ -26,19 +30,15 @@ async function sendMessage() {
     chat.scrollTop = chat.scrollHeight;
 
     try {
-        // CORRECCIÓN 1: Usamos ruta relativa '/api/mensaje' para que se conecte bien en Render
         const res = await fetch("/api/mensaje", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            // CORRECCIÓN 2: Enviamos 'mensaje' (en español) que es lo que lee tu server.js
             body: JSON.stringify({ mensaje: text })
         });
 
         if (!res.ok) throw new Error("Error en la respuesta del servidor");
 
         const data = await res.json();
-        
-        // CORRECCIÓN 3: Leemos 'data.respuesta' que es el formato que devuelve tu servidor
         loading.innerHTML = data.respuesta;
 
     } catch (err) {
@@ -51,10 +51,12 @@ async function sendMessage() {
     chat.scrollTop = chat.scrollHeight;
 }
 
-button.addEventListener("click", sendMessage);
+// 3. Pasamos el evento 'e' al hacer clic en el botón
+button.addEventListener("click", (e) => sendMessage(e));
 
+// 4. Pasamos el evento 'e' al pulsar Enter
 input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-        sendMessage();
+        sendMessage(e);
     }
 });
