@@ -9,14 +9,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURACIÓN CLAVE: Muestra la carpeta del cliente (HTML, CSS, JS) en el enlace principal
-app.use(express.static(path.join(__dirname, '../client')));
+// RUTA CORREGIDA: Sube un nivel desde 'server' y busca la carpeta 'client'
+app.use(express.static(path.join(__dirname, '..', 'client')));
 
-// Aquí van tus rutas de la API del bot (por ejemplo, para escuchar los mensajes)
+// Ruta para recibir los mensajes del bot
 app.post('/api/mensaje', async (req, res) => {
     try {
         const { mensaje } = req.body;
-        // Aquí dentro irá tu lógica con OpenAI o lo que responda tu bot...
         res.json({ respuesta: `Echo: ${mensaje}` });
     } catch (error) {
         console.error(error);
@@ -24,7 +23,12 @@ app.post('/api/mensaje', async (req, res) => {
     }
 });
 
-// El puerto dinámico que Render necesita obligatoriamente
+// Forzar a que cualquier otra ruta cargue el index.html (Evita el Cannot GET /)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
+});
+
+// El puerto dinámico para Render
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
