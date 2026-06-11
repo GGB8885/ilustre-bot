@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const openai = new OpenAI({
+const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
@@ -18,12 +18,9 @@ app.post("/chat", async (req, res) => {
   try {
     const { message } = req.body;
 
-    // 1. Corregido el método a chat.completions.create
-    // 2. Corregido el modelo a "gpt-4o-mini"
-    // 3. Corregido el parámetro "input" por "messages"
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", 
-      messages: [
+    const response = await client.responses.create({
+      model: "gpt-4o-mini",
+      input: [
         {
           role: "system",
           content:
@@ -36,21 +33,19 @@ app.post("/chat", async (req, res) => {
       ]
     });
 
-    // 4. Corregida la forma de obtener el texto de la respuesta
-    res.json({
-      reply: response.choices[0].message.content
-    });
+    const reply = response.output[0].content[0].text;
+
+    res.json({ reply });
 
   } catch (error) {
     console.error(error);
-
     res.status(500).json({
       reply: "Echo no ha podido responder en este momento."
     });
   }
 });
 
-const PORT = process.env.PORT || 3000; // Esto permite que el servidor use el puerto que le asigne internet
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Echo funcionando en http://localhost:${PORT}`);
