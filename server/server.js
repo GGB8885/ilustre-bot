@@ -9,8 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// RUTA CORREGIDA: Sube un nivel desde 'server' y busca la carpeta 'client'
-app.use(express.static(path.join(__dirname, '..', 'client')));
+// NUEVA RUTA: Como tus archivos están sueltos en la raíz, le decimos que use la raíz del proyecto
+app.use(express.static(__dirname));
 
 // Ruta para recibir los mensajes del bot
 app.post('/api/mensaje', async (req, res) => {
@@ -23,9 +23,9 @@ app.post('/api/mensaje', async (req, res) => {
     }
 });
 
-// Forzar a que cualquier otra ruta cargue el index.html (Evita el Cannot GET /)
+// Forzar a que cualquier ruta cargue el index.html que tienes suelto en la raíz
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // El puerto dinámico para Render
