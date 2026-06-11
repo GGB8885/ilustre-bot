@@ -60,3 +60,4 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor con IA funcionando en el puerto ${PORT}`);
 });
+// Forzando el reinicio del servidor
