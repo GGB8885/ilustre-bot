@@ -50,9 +50,10 @@ app.post('/api/mensaje', async (req, res) => {
     }
 });
 
-// RUTA COMODÍN DEFINITIVA PARA EXPRESS MODERNO:
-// Esta sintaxis con ':splat*' es la forma estándar e infalible para capturar todo sin errores de parámetros
-app.get('/:splat*', (req, res) => {
+// SOLUCIÓN DEFINITIVA DE CONTROL DE ACCESO UNIVERSAL:
+// En lugar de una ruta con asterisco, usamos una función de caída intermedia (middleware).
+// Si una petición no coincide con los archivos estáticos ni con la API, responderá siempre con el index.html
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
 
