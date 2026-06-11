@@ -5,14 +5,12 @@ require('dotenv').config();
 
 const app = express();
 
-// Configuraciones básicas
 app.use(cors());
 app.use(express.json());
 
-// NUEVA RUTA: Como tus archivos están sueltos en la raíz, le decimos que use la raíz del proyecto
-app.use(express.static(__dirname));
+// Al estar el Root Directory en 'server', subimos un nivel para dar con 'client'
+app.use(express.static(path.join(__dirname, '..', 'client')));
 
-// Ruta para recibir los mensajes del bot
 app.post('/api/mensaje', async (req, res) => {
     try {
         const { mensaje } = req.body;
@@ -23,14 +21,11 @@ app.post('/api/mensaje', async (req, res) => {
     }
 });
 
-// Forzar a que cualquier ruta cargue el index.html que tienes suelto en la raíz
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
 
-// El puerto dinámico para Render
 const PORT = process.env.PORT || 10000;
-
 app.listen(PORT, () => {
     console.log(`🚀 Servidor funcionando en el puerto ${PORT}`);
 });
