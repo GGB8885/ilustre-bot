@@ -4,7 +4,7 @@ const button = document.getElementById("send");
 
 function addMessage(content, type) {
     const div = document.createElement("div");
-    div.classList.add("msg", type); // Puedes pasar múltiples clases en una sola línea
+    div.classList.add("msg", type); 
     div.innerHTML = content;
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
@@ -26,27 +26,28 @@ async function sendMessage() {
     chat.scrollTop = chat.scrollHeight;
 
     try {
-        // 🌟 CAMBIO AQUÍ: Ahora apunta a tu servidor público en Render en lugar de tu PC local
-        const res = await fetch("https://echo-bot-7a0x.onrender.com/chat", {
+        // CORRECCIÓN 1: Usamos ruta relativa '/api/mensaje' para que se conecte bien en Render
+        const res = await fetch("/api/mensaje", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text })
+            // CORRECCIÓN 2: Enviamos 'mensaje' (en español) que es lo que lee tu server.js
+            body: JSON.stringify({ mensaje: text })
         });
 
         if (!res.ok) throw new Error("Error en la respuesta del servidor");
 
         const data = await res.json();
-        loading.innerHTML = data.reply;
+        
+        // CORRECCIÓN 3: Leemos 'data.respuesta' que es el formato que devuelve tu servidor
+        loading.innerHTML = data.respuesta;
 
     } catch (err) {
         console.error(err);
-        // Quitamos la apariencia de Echo y le damos una de error del sistema
         loading.classList.remove("ai");
-        loading.classList.add("error"); // Asegúrate de darle estilo a .error en tu CSS
+        loading.classList.add("error"); 
         loading.innerHTML = "⚠️ Error conectando con Echo";
     }
     
-    // Un único scroll final por si la respuesta de la IA es muy larga
     chat.scrollTop = chat.scrollHeight;
 }
 
