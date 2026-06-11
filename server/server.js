@@ -50,9 +50,9 @@ app.post('/api/mensaje', async (req, res) => {
     }
 });
 
-// RUTA COMODÍN CORREGIDA UNIVERSAL: 
-// Usar (.*) en lugar de * evita el error de "Missing parameter name" en las nuevas versiones de Express
-app.get('(.*)', (req, res) => {
+// RUTA COMODÍN DEFINITIVA PARA EXPRESS MODERNO:
+// Esta sintaxis con ':splat*' es la forma estándar e infalible para capturar todo sin errores de parámetros
+app.get('/:splat*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
 
