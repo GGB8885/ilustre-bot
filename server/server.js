@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexión con OpenAI utilizando la variable de entorno de Render
+// Conexión con OpenAI utilizando tu variable de entorno de Render
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
@@ -42,16 +42,16 @@ app.post('/api/mensaje', async (req, res) => {
         res.json({ respuesta: respuestaIA });
 
     } catch (error) {
-        // Imprime el error real en la terminal de Render para que puedas revisarlo
+        // Imprime el error real en la terminal de Render por si necesitas revisar algo
         console.error("🔴 ERROR CRÍTICO OPENAI:", error.message);
         
-        // Devolvemos un mensaje amigable para que la interfaz no se cuelgue en "escribiendo..."
-        res.json({ respuesta: "⚠️ Hola, mi cerebro se ha saturado un momento o la API Key tiene problemas. ¿Podrías revisar los logs o intentar de nuevo?" });
+        // Devolvemos un mensaje amigable para que la interfaz no se quede colgada
+        res.json({ respuesta: "⚠️ Hola, mi cerebro se ha saturado un momento. ¿Podrías intentar repetir la pregunta?" });
     }
 });
 
-// Captura cualquier otra ruta que no sea de la API y le sirve el index.html
-app.get(/^\/(?!api).*$/, (req, res) => {
+// RUTA COMODÍN CORREGIDA: Responde con el index.html ante cualquier ruta o cuenta externa
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
 
@@ -60,4 +60,3 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor con IA funcionando en el puerto ${PORT}`);
 });
-// Forzando el reinicio del servidor
