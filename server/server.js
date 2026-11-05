@@ -15,10 +15,10 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
-// Servir los archivos estáticos de la interfaz (HTML, CSS, JS) subiendo un nivel a 'client'
+// Servir los archivos estáticos de la interfaz
 app.use(express.static(path.join(__dirname, '..', 'client')));
 
-// Ruta POST para recibir los mensajes del chat y procesarlos con IA
+// Ruta POST para procesar las preguntas sobre la Ilustración
 app.post('/api/mensaje', async (req, res) => {
     try {
         const { mensaje } = req.body;
@@ -27,38 +27,34 @@ app.post('/api/mensaje', async (req, res) => {
             return res.status(400).json({ error: 'No se ha enviado ningún mensaje' });
         }
 
-        // Llamada a la Inteligencia Artificial (modelo GPT-4o-mini)
+        // Llamada a OpenAI con el nuevo rol de Ilustre-Bot
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
-                { role: "system", content: "Eres Echo, un bot de asistencia inteligente, simpático y experto en anime." },
+                { 
+                    role: "system", 
+                    content: "Eres 'Ilustre-Bot', un erudito e historiador experto en el movimiento cultural de la Ilustración (Siglo XVIII / Siglo de las Luces), la literatura ilustrada, la Enciclopedia y grandes pensadores como Voltaire, Rousseau, Montesquieu, Jovellanos o Cadalso. Responde a las dudas del estudiante de forma clara, amena, culta y muy didáctica para su trabajo de lengua castellana." 
+                },
                 { role: "user", content: mensaje }
             ],
         });
 
         const respuestaIA = completion.choices[0].message.content;
-
-        // Devolvemos la respuesta de la IA en formato JSON
         res.json({ respuesta: respuestaIA });
 
     } catch (error) {
-        // Imprime el error real en la terminal de Render por si necesitas revisar algo
         console.error("🔴 ERROR CRÍTICO OPENAI:", error.message);
-        
-        // Devolvemos un mensaje amigable para que la interfaz no se quede colgada
-        res.json({ respuesta: "⚠️ Hola, mi cerebro se ha saturado un momento. ¿Podrías intentar repetir la pregunta?" });
+        res.json({ respuesta: "⚠️ Disculpa, las luces de la razón han sufrido un breve destello. ¿Podrías replantear tu pregunta?" });
     }
 });
 
-// SOLUCIÓN DEFINITIVA DE CONTROL DE ACCESO UNIVERSAL:
-// En lugar de una ruta con asterisco, usamos una función de caída intermedia (middleware).
-// Si una petición no coincide con los archivos estáticos ni con la API, responderá siempre con el index.html
+// Middleware de caída universal para evitar errores de rutas
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
 
-// Puerto dinámico asignado por Render o puerto local 10000
+// Puerto de ejecución
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor con IA funcionando en el puerto ${PORT}`);
+    console.log(`🚀 Ilustre-Bot funcionando en el puerto ${PORT}`);
 });

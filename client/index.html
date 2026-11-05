@@ -1,59 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Echo</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilustre-Bot | El Siglo de las Luces</title>
+    <!-- Fuentes tipográficas clásicas de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <div class="chat-container">
+        <!-- Cabecera del chat -->
+        <header class="chat-header">
+            <div class="header-content">
+                <h1>Ilustre-Bot</h1>
+                <p>Sabiduría y Razón • El Siglo de las Luces</p>
+            </div>
+        </header>
 
-  <div class="background"></div>
+        <!-- Área donde aparecen los mensajes -->
+        <main class="chat-messages" id="chat-messages">
+            <div class="message bot-message">
+                ¡Saludos! Soy <strong>Ilustre-Bot</strong>. Estoy aquí para resolver todas tus dudas sobre el movimiento de la Ilustración, sus autores, obras y la Enciclopedia. ¿Qué deseas consultar hoy?
+            </div>
+        </main>
 
-  <div class="container">
-
-    <div class="header">
-      <div class="logo">
-        <div class="circle"></div>
-        <div>
-          <h1>Echo</h1>
-          <p>Asistente oficial de VENN</p>
-        </div>
-      </div>
+        <!-- Formulario para escribir los mensajes -->
+        <form class="chat-input-area" id="chat-form">
+            <input 
+                type="text" 
+                id="user-input" 
+                placeholder="Haz una pregunta sobre el Siglo de las Luces..." 
+                autocomplete="off" 
+                required
+            >
+            <button type="submit" id="send-btn">Preguntar</button>
+        </form>
     </div>
 
-    <div id="chat">
-      <div class="ai">
-        Hola 👋
-        <br><br>
-        Soy <b>Echo</b>.
-        <br><br>
-        Estoy aquí para ayudarte a descubrir contenido, responder preguntas y acompañarte dentro de VENN.
-        <br><br>
-        ¿En qué puedo ayudarte?
-      </div>
-    </div>
-
-    <form class="bottom" id="chat-form">
-      <input 
-        id="message" 
-        type="text" 
-        placeholder="Escribe un mensaje..."
-        autocomplete="off"
-      >
-      <button id="send" type="submit" aria-label="Enviar mensaje">
-        ➜
-      </button>
-    </form>
-
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
-
 </html>
